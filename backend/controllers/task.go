@@ -28,7 +28,7 @@ func AddNewTask(c *gin.Context) {
 		apihandlers.RespondJSON(c, 400, task, "Failed to save task!")
 	} else {
 		log.Info().Interface("task", task).Msg("Successfully saved task")
-		apihandlers.RespondJSON(c, 200, task, "Task saved successfully!")
+		apihandlers.RespondJSON(c, 201, task, "Task saved successfully!")
 	}
 }
 
