@@ -9,7 +9,6 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
-
 	var err error
 	DB, err = gorm.Open(sqlite.Open("task-management.db"), &gorm.Config{})
 	if err != nil {
