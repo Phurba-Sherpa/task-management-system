@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	apihandlers "github.com/phurba-sherpa/task-management-backend/api-handlers"
 	"github.com/phurba-sherpa/task-management-backend/models"
 	"github.com/rs/zerolog/log"
@@ -23,17 +25,25 @@ func GetAllTasks(c *gin.Context) {
 }
 
 func AddNewTask(c *gin.Context) {
-
 	// ** Get data from req body
 	var body struct {
-		Title       string `json:"title"`
+		Title       string `json:"title" validate:"required,max=255"`
 		Description string `json:"description"`
 	}
+
 	c.BindJSON(&body)
+	validate := validator.New()
+	var err error
+	err = validate.Struct(body)
+	if err != nil {
+		log.Error().Err(err).Msg("Task validation failed")
+		apihandlers.RespondJSON(c, http.StatusBadRequest, nil, fmt.Sprintf("Validation error: %s", err))
+		return
+
+	}
 
 	task := models.Task{Title: body.Title, Description: body.Description}
-
-	err := models.AddNewTask(&task)
+	err = models.AddNewTask(&task)
 
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to add task")
