@@ -1,12 +1,12 @@
-import { Typography } from "@mui/material";
 import ThemeProviderWrapper from "./provider";
 import SnackbarProvider from "./snackbar-provider";
+import TaskSection from "../features/task";
 
 function App() {
   return (
     <ThemeProviderWrapper>
       <SnackbarProvider>
-        <Typography>Task Management System</Typography>
+        <TaskSection />
       </SnackbarProvider>
     </ThemeProviderWrapper>
   );
