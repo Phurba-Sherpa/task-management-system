@@ -23,10 +23,18 @@ func GetAllTasks(c *gin.Context) {
 }
 
 func AddNewTask(c *gin.Context) {
-	var task models.Task
 
-	c.BindJSON(&task)
+	// ** Get data from req body
+	var body struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+	}
+	c.BindJSON(&body)
+
+	task := models.Task{Title: body.Title, Description: body.Description}
+
 	err := models.AddNewTask(&task)
+
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to add task")
 		apihandlers.RespondJSON(c, http.StatusBadRequest, task, "Failed to save task!")
