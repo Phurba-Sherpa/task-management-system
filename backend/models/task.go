@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/phurba-sherpa/task-management-backend/db"
 )
 
@@ -30,7 +32,16 @@ func UpdateTask(t *Task, id string) (err error) {
 	return nil
 }
 
-func DeleteTask(t *Task, id string) (err error) {
-	db.DB.Where("id = ?", id).Delete(t)
+func DeleteTask(t *Task, id uint) (err error) {
+	res := db.DB.Delete(&Task{ID: id})
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	if res.RowsAffected == 0 {
+		return fmt.Errorf("no task found with ID: %d", id)
+	}
+
 	return nil
 }
