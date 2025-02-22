@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	apihandlers "github.com/phurba-sherpa/task-management-backend/api-handlers"
@@ -54,7 +55,9 @@ func UpdateTask(c *gin.Context) {
 	err := models.GetTaskById(&task, id)
 	if err != nil {
 		apihandlers.RespondJSON(c, http.StatusNotFound, task, "Task doesnt exist!")
+		return
 	}
+
 	c.BindJSON(&task)
 	err = models.UpdateTask(&task, id)
 	if err != nil {
@@ -66,9 +69,13 @@ func UpdateTask(c *gin.Context) {
 
 func DeleteTask(c *gin.Context) {
 	var task models.Task
-	id := c.Params.ByName("id")
+	id, err := strconv.Atoi(c.Params.ByName("id"))
+	if err != nil {
+		apihandlers.RespondJSON(c, http.StatusBadRequest, task, "Invalid task ID")
+		return
+	}
 
-	err := models.DeleteTask(&task, id)
+	err = models.DeleteTask(&task, uint(id))
 	if err != nil {
 		apihandlers.RespondJSON(c, http.StatusBadRequest, task, "Task deletion failed")
 	} else {
