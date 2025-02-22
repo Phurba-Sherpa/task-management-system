@@ -89,13 +89,13 @@ func DeleteTask(c *gin.Context) {
 	var task models.Task
 	id, err := strconv.Atoi(c.Params.ByName("id"))
 	if err != nil {
-		apihandlers.RespondJSON(c, http.StatusBadRequest, task, "Invalid task ID")
+		apihandlers.RespondJSON(c, http.StatusBadRequest, nil, "Invalid task ID")
 		return
 	}
 
 	err = models.DeleteTask(&task, uint(id))
 	if err != nil {
-		apihandlers.RespondJSON(c, http.StatusBadRequest, task, "Task deletion failed")
+		apihandlers.RespondJSON(c, http.StatusBadRequest, nil, "Task with given ID doesn't exists")
 	} else {
 		apihandlers.RespondJSON(c, http.StatusOK, task, "Task successfully deleted")
 	}
