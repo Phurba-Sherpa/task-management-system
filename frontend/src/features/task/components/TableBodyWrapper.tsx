@@ -1,18 +1,20 @@
 import {
   TableCell,
   TableRow,
-  TextField,
   TableBody,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { FC } from "react";
+import { Status } from "../../../types/type";
+import StatusPill from "./StatusPill";
+import StatusUpdateField from "./StatusUpdateField";
 
 type TaskProps = {
   id: number;
   title: string;
   description: string;
-  status: "TODO" | "IN PROGRESS" | "DONE" | "ON HOLD";
+  status: Status;
   createdAt: number;
 };
 
@@ -44,12 +46,15 @@ const TableRowWrapper: FC<TaskProps> = ({
   return (
     <TableRow>
       <TableCell>TASK-{id}</TableCell>
-      <TableCell>{title}</TableCell>
+      <TableCell sx={{ minWidth: "170px" }}>
+        {title}
+        <StatusPill status={status} />
+      </TableCell>
       <TableCell>
         <Tooltip title={description}>
           <Typography
             sx={{
-              maxWidth: "65ch",
+              maxWidth: "55ch",
               display: "-webkit-box",
               overflow: "hidden",
               WebkitBoxOrient: "vertical",
@@ -60,10 +65,13 @@ const TableRowWrapper: FC<TaskProps> = ({
           </Typography>
         </Tooltip>
       </TableCell>
-      <TableCell>{status}</TableCell>
       <TableCell>{createdAt}</TableCell>
-      <TableCell>
-        <TextField size="small" label="Status" />
+      <TableCell
+        sx={{
+          minWidth: "130px",
+        }}
+      >
+        <StatusUpdateField />
       </TableCell>
     </TableRow>
   );
