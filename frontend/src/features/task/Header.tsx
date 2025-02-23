@@ -1,7 +1,13 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
-const Header = ({ handleAddBtn }: { handleAddBtn: () => void }) => {
+const Header = ({
+  handleAddBtn,
+  recordsCount,
+}: {
+  handleAddBtn: () => void;
+  recordsCount: number;
+}) => {
   return (
     <Stack
       p={3}
@@ -30,7 +36,7 @@ const Header = ({ handleAddBtn }: { handleAddBtn: () => void }) => {
           Task Managment System
         </Typography>
         <Typography variant="subtitle2" sx={{ mt: 0.5 }}>
-          733 restults
+          {recordsCount} restults
         </Typography>
       </Box>
       <Button
