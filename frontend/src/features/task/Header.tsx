@@ -4,22 +4,49 @@ import { Add } from "@mui/icons-material";
 const Header = () => {
   return (
     <Stack
-      flexDirection="row"
-      justifyContent="space-between"
-      py={2}
-      alignItems="center"
-      mb={3}
+      p={2}
+      sx={{
+        flexDirection: {
+          xs: "column",
+          md: "row",
+        },
+        justifyContent: {
+          xs: "start",
+          md: "space-between",
+        },
+      }}
     >
       <Box>
-        <Typography variant="h3" fontWeight={500}>
+        <Typography
+          variant="h3"
+          fontWeight={500}
+          sx={{
+            fontSize: {
+              xs: "24px",
+              md: "32px",
+            },
+          }}
+        >
           Task Managment System
         </Typography>
         <Typography variant="subtitle2" sx={{ mt: 0.5 }}>
           733 restults
         </Typography>
       </Box>
-      <Button size="large" variant="contained" startIcon={<Add />}>
-        Add
+      <Button
+        sx={{
+          textTransform: "capitalize",
+          alignSelf: "start",
+          mt: {
+            xs: 2,
+            md: 0,
+          },
+        }}
+        size="large"
+        variant="contained"
+        startIcon={<Add />}
+      >
+        Add New
       </Button>
     </Stack>
   );
