@@ -47,8 +47,18 @@ const TableRowWrapper: FC<TaskProps> = ({
   return (
     <TableRow>
       <TableCell>TASK-{id}</TableCell>
-      <TableCell sx={{ minWidth: "170px" }}>
-        {title}
+      <TableCell sx={{ minWidth: "40ch" }}>
+        <Typography
+          sx={{
+            display: "-webkit-box",
+            maxWidth: "55ch",
+            overflow: "hidden",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 2,
+          }}
+        >
+          {title}
+        </Typography>
         <StatusPill status={status} />
       </TableCell>
       <TableCell>
