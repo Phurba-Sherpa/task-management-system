@@ -9,6 +9,7 @@ import { FC } from "react";
 import { Status } from "../../../types/type";
 import StatusPill from "./StatusPill";
 import StatusUpdateField from "./StatusUpdateField";
+import TaskControls from "./TaskControls";
 
 type TaskProps = {
   id: number;
@@ -72,6 +73,7 @@ const TableRowWrapper: FC<TaskProps> = ({
         }}
       >
         <StatusUpdateField />
+        <TaskControls />
       </TableCell>
     </TableRow>
   );
