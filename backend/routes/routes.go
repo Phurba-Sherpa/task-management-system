@@ -21,6 +21,7 @@ func SetupRoutes() *gin.Engine {
 		v1.GET("tasks/:id", controllers.GetTaskById)
 		v1.POST("tasks", controllers.AddNewTask)
 		v1.PUT("tasks/:id", controllers.UpdateTask)
+		v1.PUT("tasks/:id/status", controllers.UpdateTaskStatus)
 		v1.DELETE("tasks/:id", controllers.DeleteTask)
 	}
 

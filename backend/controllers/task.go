@@ -12,6 +12,14 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+// Allowed statuses
+var validStatuses = map[string]bool{
+	"TODO":        true,
+	"ON HOLD":     true,
+	"IN PROGRESS": true,
+	"DONE":        true,
+}
+
 func GetAllTasks(c *gin.Context) {
 	var tasks []models.Task
 	err := models.GetAllTasks(&tasks)
@@ -99,4 +107,41 @@ func DeleteTask(c *gin.Context) {
 	} else {
 		apihandlers.RespondJSON(c, http.StatusOK, task, "Task successfully deleted")
 	}
+}
+
+func UpdateTaskStatus(c *gin.Context) {
+	id, err := strconv.Atoi(c.Params.ByName("id"))
+	if err != nil {
+		apihandlers.RespondJSON(c, http.StatusBadRequest, nil, "Invalid task ID")
+		return
+	}
+
+	var request struct {
+		Status string `json:"status" validate:"required"`
+	}
+
+	err = c.BindJSON(&request)
+
+	if err != nil {
+		apihandlers.RespondJSON(c, http.StatusBadRequest, nil, "Invalid request")
+		return
+	}
+
+	if !validStatuses[request.Status] {
+		apihandlers.RespondJSON(c, http.StatusBadRequest, nil, "Invalid status value")
+		return
+	}
+
+	err = models.UpdateTaskStatus(request.Status, id)
+	if err != nil {
+		log.Error().Err(err).Msg("Failed to fetch task")
+		apihandlers.RespondJSON(c, http.StatusBadRequest, nil, fmt.Sprintf("Error: %s", err))
+		return
+	}
+
+	var task models.Task
+	models.GetTaskById(&task, strconv.Itoa(id))
+
+	apihandlers.RespondJSON(c, http.StatusOK, task, "Status updated successfully")
+
 }

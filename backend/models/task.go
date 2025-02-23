@@ -45,3 +45,16 @@ func DeleteTask(t *Task, id uint) (err error) {
 
 	return nil
 }
+
+func UpdateTaskStatus(status string, id int) (err error) {
+	res := db.DB.Model(&Task{}).Where("id=?", id).Update("status", status)
+	if res.Error != nil {
+		return res.Error
+	}
+
+	if res.RowsAffected == 0 {
+		return fmt.Errorf("no task found with ID: %d", id)
+	}
+
+	return nil
+}
