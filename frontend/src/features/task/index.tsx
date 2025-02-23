@@ -7,6 +7,7 @@ import TaskModal from "./TaskModal";
 import { useTasks } from "./useTask";
 import { useSnackbar } from "../../app/snackbar-provider";
 import { useEffect } from "react";
+import PageLoaderWithText from "../../components/ui/Loader";
 
 const TaskSection = () => {
   const { open, isOpen, close } = useDisclosure(false);
@@ -25,6 +26,12 @@ const TaskSection = () => {
 
   return (
     <Box>
+      {isLoading && (
+        <PageLoaderWithText
+          isLoading={isLoading}
+          loaderText="Fetching tasks, please wait"
+        />
+      )}
       <Box mb={2}>
         <CardWrapper>
           <Header recordsCount={data?.length} handleAddBtn={open} />
