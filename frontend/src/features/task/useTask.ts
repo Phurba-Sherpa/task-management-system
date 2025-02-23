@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchTasks, addTask, updateTask } from "../../services/task-services";
+import {
+  fetchTasks,
+  addTask,
+  updateTask,
+  deleteTask,
+} from "../../services/task-services";
 import { useSnackbar } from "../../app/snackbar-provider";
 
 const KEY = "TASKS";
@@ -38,12 +43,25 @@ export const useTasks = () => {
     },
   });
 
+  // Delete task
+  const { mutate: doDeleteTask, isPending: isDeleting } = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      onSuccess("Task deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: [KEY] });
+    },
+    onError: (error) => {
+      onError(`Failed to delete task! ${error.message}`);
+    },
+  });
+
   return {
     data,
     isLoading,
     status,
     doAddTask,
-    isPending: isAdding || isUpdating,
+    isPending: isAdding || isUpdating || isDeleting,
     doUpdateTask,
+    doDeleteTask,
   };
 };

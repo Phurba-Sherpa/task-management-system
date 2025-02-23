@@ -25,3 +25,9 @@ export const updateTask = async ({ payload, id }: UpdateTaskProp) => {
   const resp = await publicApi.put(url, payload);
   return resp;
 };
+
+export const deleteTask = async ( id : number) => {
+  const url = `/tasks/${id}`;
+  const resp = await publicApi.delete(url);
+  return resp;
+};

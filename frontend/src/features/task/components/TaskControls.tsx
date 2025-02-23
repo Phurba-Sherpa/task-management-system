@@ -15,8 +15,12 @@ const TaskControls = ({
   title: string;
   description: string;
 }) => {
-  const { open, isOpen, close } = useDisclosure(false);
-  const { doUpdateTask, isPending } = useTasks();
+  const {
+    open: openDelConfirmModal,
+    isOpen: isDelConfirmModalOpen,
+    close: closeDelConfirmModal,
+  } = useDisclosure(false);
+  const { doUpdateTask, doDeleteTask, isPending } = useTasks();
   const {
     open: openUpdateModal,
     isOpen: isUpdateModalOpen,
@@ -24,14 +28,17 @@ const TaskControls = ({
   } = useDisclosure(false);
 
   const handleDeleteBtn = () => {
-    open();
+    openDelConfirmModal();
   };
 
   const handleUpdateBtn = () => {
     openUpdateModal();
   };
   const handleViewBtn = () => {};
-  const handleConfirm = () => {};
+  const handleConfirm = () => {
+    doDeleteTask(id);
+    closeDelConfirmModal();
+  };
 
   const handleSubmit = (e: HTMLFormElement) => {
     e.preventDefault();
@@ -77,12 +84,14 @@ const TaskControls = ({
             isLoading={isPending}
           />
         )}
-        <DeleteConfirmationDialog
-          isLoading={false}
-          handleConfirm={handleConfirm}
-          open={isOpen}
-          onClose={close}
-        />
+        {isDelConfirmModalOpen && (
+          <DeleteConfirmationDialog
+            isLoading={isPending}
+            handleConfirm={handleConfirm}
+            open={isDelConfirmModalOpen}
+            onClose={closeDelConfirmModal}
+          />
+        )}
       </div>
     </>
   );
