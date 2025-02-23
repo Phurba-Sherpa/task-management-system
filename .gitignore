@@ -1,4 +1,6 @@
 node_modules/
 frontend/dist/
 backend/.env
+frontend/.env
 backend/tmp
+*.db
