@@ -1,3 +1,4 @@
+import { Status } from "../types/type";
 import { publicApi } from "./client";
 
 export type TaskProps = {
@@ -26,8 +27,22 @@ export const updateTask = async ({ payload, id }: UpdateTaskProp) => {
   return resp;
 };
 
-export const deleteTask = async ( id : number) => {
+export const deleteTask = async (id: number) => {
   const url = `/tasks/${id}`;
   const resp = await publicApi.delete(url);
+  return resp;
+};
+
+export const updateTaskStatus = async ({
+  payload,
+  id,
+}: {
+  payload: {
+    status: Status;
+  };
+  id: number;
+}) => {
+  const url = `/tasks/${id}/status`;
+  const resp = await publicApi.put(url, payload);
   return resp;
 };

@@ -82,7 +82,7 @@ const TableRowWrapper: FC<TaskProps> = ({
           minWidth: "130px",
         }}
       >
-        <StatusUpdateField />
+        <StatusUpdateField id={id} status={status} />
       </TableCell>
       <TableCell>
         <TaskControls title={title} description={description} id={id} />

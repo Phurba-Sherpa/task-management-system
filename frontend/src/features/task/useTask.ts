@@ -4,6 +4,7 @@ import {
   addTask,
   updateTask,
   deleteTask,
+  updateTaskStatus,
 } from "../../services/task-services";
 import { useSnackbar } from "../../app/snackbar-provider";
 
@@ -39,7 +40,7 @@ export const useTasks = () => {
   const { mutate: doUpdateTask, isPending: isUpdating } = useMutation({
     mutationFn: updateTask,
     onSuccess: (resp) => {
-      if (resp?.data?.status === 200) {
+      if (resp?.data?.status === 201) {
         onSuccess("Task updated successfully!");
         queryClient.invalidateQueries({ queryKey: [KEY] });
       } else {
@@ -50,6 +51,23 @@ export const useTasks = () => {
       onError(`Failed to update task! ${error.message}`);
     },
   });
+
+  // Update task
+  const { mutate: doUpdateTaskStatus, isPending: isUpdatingStatus } =
+    useMutation({
+      mutationFn: updateTaskStatus,
+      onSuccess: (resp) => {
+        if (resp?.data?.status === 200) {
+          onSuccess("Task updated successfully!");
+          queryClient.invalidateQueries({ queryKey: [KEY] });
+        } else {
+          onError(resp?.data?.statusMsg || "Failed to save task details!");
+        }
+      },
+      onError: (error) => {
+        onError(`Failed to update task! ${error.message}`);
+      },
+    });
 
   // Delete task
   const { mutate: doDeleteTask, isPending: isDeleting } = useMutation({
@@ -68,8 +86,9 @@ export const useTasks = () => {
     isLoading,
     status,
     doAddTask,
-    isPending: isAdding || isUpdating || isDeleting,
+    isPending: isAdding || isUpdating || isDeleting || isUpdatingStatus,
     doUpdateTask,
     doDeleteTask,
+    doUpdateTaskStatus,
   };
 };

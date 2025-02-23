@@ -1,13 +1,24 @@
 import { TextField, MenuItem } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTasks } from "../useTask";
+import { Status } from "../../../types/type";
 
 const statusOptions = ["TODO", "IN PROGRESS", "DONE", "ON HOLD"];
-const StatusUpdateField = () => {
+const StatusUpdateField = ({ id, status }: { id: number; status: Status }) => {
   const [newStatus, setNewStatus] = useState("TODO");
-  const handleChange = (e) => {
-    console.log(e.target.value);
-    setNewStatus(e.target.value);
+  const { doUpdateTaskStatus } = useTasks();
+
+  useEffect(() => {
+    setNewStatus(status);
+  }, [status]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const payload = {
+      status: e.target.value as Status,
+    };
+    doUpdateTaskStatus({ payload, id });
   };
+
   return (
     <TextField
       value={newStatus}
@@ -18,7 +29,6 @@ const StatusUpdateField = () => {
       select
       label="Current status"
       defaultValue="TODO"
-      helperText="Update task status"
       variant="standard"
     >
       {statusOptions.map((status) => (

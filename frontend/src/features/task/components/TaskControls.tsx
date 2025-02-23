@@ -57,7 +57,7 @@ const TaskControls = ({
             onClick={handleUpdateBtn}
             aria-label="update-task"
           >
-            <EditNote />
+            <EditNote fontSize="medium" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete Task">
@@ -66,7 +66,7 @@ const TaskControls = ({
             onClick={handleDeleteBtn}
             aria-label="details"
           >
-            <DeleteOutlined />
+            <DeleteOutlined fontSize="medium" />
           </IconButton>
         </Tooltip>
       </Box>
