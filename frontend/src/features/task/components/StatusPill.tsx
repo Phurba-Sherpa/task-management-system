@@ -36,7 +36,7 @@ function StatusPill({ status }: { status: Status }) {
           fontSize: "12px",
           borderRadius: "6px",
           paddingX: "8px",
-          paddingY: "2px",
+          paddingY: "1px",
           alignContent: "center",
           fontWeight: 500,
           textTransform: "capitalize",
