@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchTasks, addTask } from "../../services/task-services";
+import { fetchTasks, addTask, updateTask } from "../../services/task-services";
 import { useSnackbar } from "../../app/snackbar-provider";
 
 const KEY = "TASKS";
@@ -15,7 +15,7 @@ export const useTasks = () => {
   });
 
   // Add task
-  const { mutate: doAddTask, isPending } = useMutation({
+  const { mutate: doAddTask, isPending: isAdding } = useMutation({
     mutationFn: addTask,
     onSuccess: () => {
       onSuccess("Task successfully saved!");
@@ -25,11 +25,25 @@ export const useTasks = () => {
       onError("Failed to save task!");
     },
   });
+
+  // Update task
+  const { mutate: doUpdateTask, isPending: isUpdating } = useMutation({
+    mutationFn: updateTask,
+    onSuccess: () => {
+      onSuccess("Task updated successfully!");
+      queryClient.invalidateQueries({ queryKey: [KEY] });
+    },
+    onError: (error) => {
+      onError(`Failed to update task! ${error.message}`);
+    },
+  });
+
   return {
     data,
     isLoading,
     status,
     doAddTask,
-    isPending,
+    isPending: isAdding || isUpdating,
+    doUpdateTask,
   };
 };
