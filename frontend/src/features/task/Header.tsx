@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
-const Header = () => {
+const Header = ({ handleAddBtn }: { handleAddBtn: () => void }) => {
   return (
     <Stack
       p={3}
@@ -45,6 +45,7 @@ const Header = () => {
         size="large"
         variant="contained"
         startIcon={<Add />}
+        onClick={handleAddBtn}
       >
         Add New
       </Button>

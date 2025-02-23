@@ -24,10 +24,10 @@ const DialogWrapper: React.FC<DialogProps> = ({
       sx={{
         "& .MuiDialogTitle-root": {
           px: 4,
-          py: 3,
+          py: 2,
         },
         "& .MuiDialogContent-root": {
-          padding: 4,
+          p: 4,
         },
       }}
     >
