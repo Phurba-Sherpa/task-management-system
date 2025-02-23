@@ -22,9 +22,13 @@ export const useTasks = () => {
   // Add task
   const { mutate: doAddTask, isPending: isAdding } = useMutation({
     mutationFn: addTask,
-    onSuccess: () => {
-      onSuccess("Task successfully saved!");
-      queryClient.invalidateQueries({ queryKey: [KEY] });
+    onSuccess: (resp) => {
+      if (resp?.data?.status === 200) {
+        onSuccess("Task successfully saved!");
+        queryClient.invalidateQueries({ queryKey: [KEY] });
+      } else {
+        onError(resp?.data?.statusMsg || "Failed to save task details!");
+      }
     },
     onError: () => {
       onError("Failed to save task!");
@@ -34,9 +38,13 @@ export const useTasks = () => {
   // Update task
   const { mutate: doUpdateTask, isPending: isUpdating } = useMutation({
     mutationFn: updateTask,
-    onSuccess: () => {
-      onSuccess("Task updated successfully!");
-      queryClient.invalidateQueries({ queryKey: [KEY] });
+    onSuccess: (resp) => {
+      if (resp?.data?.status === 200) {
+        onSuccess("Task updated successfully!");
+        queryClient.invalidateQueries({ queryKey: [KEY] });
+      } else {
+        onError(resp?.data?.statusMsg || "Failed to save task details!");
+      }
     },
     onError: (error) => {
       onError(`Failed to update task! ${error.message}`);

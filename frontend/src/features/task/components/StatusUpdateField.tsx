@@ -1,9 +1,18 @@
 import { TextField, MenuItem } from "@mui/material";
+import { useState } from "react";
 
-const status = ["TODO", "IN PROGRESS"];
+const statusOptions = ["TODO", "IN PROGRESS", "DONE", "ON HOLD"];
 const StatusUpdateField = () => {
+  const [newStatus, setNewStatus] = useState("TODO");
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    setNewStatus(e.target.value);
+  };
   return (
     <TextField
+      value={newStatus}
+      onChange={handleChange}
+      name="status"
       fullWidth
       id="task-status-update"
       select
@@ -12,7 +21,7 @@ const StatusUpdateField = () => {
       helperText="Update task status"
       variant="standard"
     >
-      {status.map((status) => (
+      {statusOptions.map((status) => (
         <MenuItem key={status} value={status}>
           {status}
         </MenuItem>
