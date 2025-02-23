@@ -37,13 +37,13 @@ const DeleteConfirmationDialog: FC<DeleteConfirmProps> = ({
         <Stack direction="row" spacing={4}>
           <Box
             sx={{
-              bgcolor: "red.100",
+              bgcolor: "#ffebee",
               borderRadius: "999px",
               alignSelf: "flex-start",
               padding: "4px 8px",
             }}
           >
-            <WarningAmber sx={{ color: "red.500" }} fontSize="large" />
+            <WarningAmber sx={{ color: "#e53935" }} fontSize="large" />
           </Box>
           <Box>
             <Typography variant="h4" gutterBottom>
@@ -65,14 +65,18 @@ const DeleteConfirmationDialog: FC<DeleteConfirmProps> = ({
         </Stack>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 3 }}>
-        <Button variant="outlined" onClick={onClose} sx={{ mr: 1 }}>
+        <Button
+          onClick={onClose}
+          sx={{ mr: 1, textTransform: "capitalize", borderRadius: 99 }}
+        >
           Cancel
         </Button>
         <Button
+          sx={{ textTransform: "capitalize", borderRadius: 99 }}
           loading={isLoading}
           loadingPosition="start"
           startIcon={<CheckOutlined />}
-          variant="outlined"
+          variant="contained"
           onClick={handleConfirm}
         >
           Acknowledged
