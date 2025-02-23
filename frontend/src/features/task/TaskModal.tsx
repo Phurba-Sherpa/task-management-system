@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, FormEventHandler, useEffect, useState } from "react";
 import DialogWrapper from "../../components/ui/DialogWrapper";
 import { Button, Stack, TextField } from "@mui/material";
 import { SaveOutlined } from "@mui/icons-material";
@@ -11,6 +11,8 @@ type TaskModalProps = {
     description: string;
   };
   modalTitle: string;
+  handleSubmit: FormEventHandler<HTMLFormElement>;
+  isLoading: boolean;
 };
 
 const TaskModal: FC<TaskModalProps> = ({
@@ -18,6 +20,8 @@ const TaskModal: FC<TaskModalProps> = ({
   onClose,
   initialValues,
   modalTitle,
+  handleSubmit,
+  isLoading,
 }) => {
   const [title, setTitle] = useState(initialValues?.title || "");
   const [description, setDescription] = useState(
@@ -33,10 +37,6 @@ const TaskModal: FC<TaskModalProps> = ({
       setDescription(initialValues.description);
     }
   }, [initialValues.title, initialValues.description]);
-
-  const handleSubmit = () => {
-    onClose();
-  };
 
   return (
     <DialogWrapper
@@ -69,6 +69,7 @@ const TaskModal: FC<TaskModalProps> = ({
 
         <Stack flexDirection="row" gap={1} justifyContent="flex-end" mt={4}>
           <Button
+            disabled={isLoading}
             onClick={onClose}
             type="reset"
             sx={{ textTransform: "capitalize", borderRadius: 99 }}
@@ -76,6 +77,7 @@ const TaskModal: FC<TaskModalProps> = ({
             Cancel
           </Button>
           <Button
+            loading={isLoading}
             type="submit"
             variant="contained"
             startIcon={<SaveOutlined />}

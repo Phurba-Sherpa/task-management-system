@@ -8,10 +8,11 @@ import { useTasks } from "./useTask";
 import { useSnackbar } from "../../app/snackbar-provider";
 import { useEffect } from "react";
 import PageLoaderWithText from "../../components/ui/Loader";
+import { TaskProps } from "../../services/task-services";
 
 const TaskSection = () => {
   const { open, isOpen, close } = useDisclosure(false);
-  const { data: resp, isLoading } = useTasks();
+  const { data: resp, isLoading, isPending, doAddTask } = useTasks();
   const { onError } = useSnackbar();
 
   let data = resp?.data?.status === 200 ? resp.data.data : [];
@@ -23,6 +24,14 @@ const TaskSection = () => {
       );
     }
   }, [resp]);
+
+  const handleSubmit = (e: HTMLFormElement) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData.entries()) as TaskProps;
+    doAddTask(payload);
+    close();
+  };
 
   return (
     <Box>
@@ -43,6 +52,8 @@ const TaskSection = () => {
 
       {isOpen && (
         <TaskModal
+          isLoading={isPending}
+          handleSubmit={handleSubmit}
           open={isOpen}
           modalTitle="Add new task"
           onClose={close}
