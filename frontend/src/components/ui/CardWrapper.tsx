@@ -6,8 +6,6 @@ export const CardWrapper = ({ children }: { children: React.ReactNode }) => {
     <Box
       sx={{
         backgroundColor: "white",
-        marginTop: 3,
-        padding: 5,
         borderRadius: 3,
         borderWidth: 1,
         borderColor: "#EBEBEB",
