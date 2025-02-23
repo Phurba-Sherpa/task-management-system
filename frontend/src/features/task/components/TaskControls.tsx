@@ -1,20 +1,27 @@
 import { Box, IconButton, Tooltip } from "@mui/material";
 import {
   EditNote,
-  FormatListBulleted,
   DeleteOutlined,
 } from "@mui/icons-material";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 import DeleteConfirmationDialog from "../../../components/ui/DeleteConfirmationDialog";
+import TaskModal from "../TaskModal";
 
 const TaskControls = ({}) => {
   const { open, isOpen, close } = useDisclosure(false);
+  const {
+    open: openUpdateModal,
+    isOpen: isUpdateModalOpen,
+    close: closeUpdateModal,
+  } = useDisclosure(false);
 
   const handleDeleteBtn = () => {
     open();
   };
 
-  const handleUpdateBtn = () => {};
+  const handleUpdateBtn = () => {
+    openUpdateModal();
+  };
   const handleViewBtn = () => {};
   const handleConfirm = () => {};
   return (
@@ -24,18 +31,9 @@ const TaskControls = ({}) => {
           <IconButton
             color="primary"
             onClick={handleUpdateBtn}
-            aria-label="approve"
+            aria-label="update-task"
           >
             <EditNote />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="View details">
-          <IconButton
-            color="primary"
-            onClick={handleViewBtn}
-            aria-label="details"
-          >
-            <FormatListBulleted />
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete Task">
@@ -49,6 +47,17 @@ const TaskControls = ({}) => {
         </Tooltip>
       </Box>
       <div>
+        {isUpdateModalOpen && (
+          <TaskModal
+            open={isUpdateModalOpen}
+            onClose={closeUpdateModal}
+            modalTitle="Edit task details"
+            initialValues={{
+              title: "Learn bash in 3 months",
+              description: "",
+            }}
+          />
+        )}
         <DeleteConfirmationDialog
           isLoading={false}
           handleConfirm={handleConfirm}
