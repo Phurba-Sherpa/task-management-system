@@ -1,14 +1,22 @@
 import { Box, IconButton, Tooltip } from "@mui/material";
-import {
-  EditNote,
-  DeleteOutlined,
-} from "@mui/icons-material";
+import { EditNote, DeleteOutlined } from "@mui/icons-material";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 import DeleteConfirmationDialog from "../../../components/ui/DeleteConfirmationDialog";
 import TaskModal from "../TaskModal";
+import { useTasks } from "../useTask";
+import { TaskProps } from "../../../services/task-services";
 
-const TaskControls = ({}) => {
+const TaskControls = ({
+  id,
+  title,
+  description,
+}: {
+  id: number;
+  title: string;
+  description: string;
+}) => {
   const { open, isOpen, close } = useDisclosure(false);
+  const { doUpdateTask, isPending } = useTasks();
   const {
     open: openUpdateModal,
     isOpen: isUpdateModalOpen,
@@ -24,6 +32,15 @@ const TaskControls = ({}) => {
   };
   const handleViewBtn = () => {};
   const handleConfirm = () => {};
+
+  const handleSubmit = (e: HTMLFormElement) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData.entries()) as TaskProps;
+    doUpdateTask({ payload, id });
+    closeUpdateModal();
+  };
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -53,9 +70,11 @@ const TaskControls = ({}) => {
             onClose={closeUpdateModal}
             modalTitle="Edit task details"
             initialValues={{
-              title: "Learn bash in 3 months",
-              description: "",
+              title,
+              description,
             }}
+            handleSubmit={handleSubmit}
+            isLoading={isPending}
           />
         )}
         <DeleteConfirmationDialog
