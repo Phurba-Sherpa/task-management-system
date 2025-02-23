@@ -4,19 +4,34 @@ import TaskList from "./TaskList";
 import { CardWrapper } from "../../components/ui/CardWrapper";
 import { useDisclosure } from "../../hooks/useDisclosure";
 import TaskModal from "./TaskModal";
+import { useTasks } from "./useTask";
+import { useSnackbar } from "../../app/snackbar-provider";
+import { useEffect } from "react";
 
 const TaskSection = () => {
-  const { open, isOpen, close } = useDisclosure(true);
+  const { open, isOpen, close } = useDisclosure(false);
+  const { data: resp, isLoading } = useTasks();
+  const { onError } = useSnackbar();
+
+  let data = resp?.data?.status === 200 ? resp.data.data : [];
+
+  useEffect(() => {
+    if (resp && resp?.data?.status !== 200) {
+      onError(
+        resp?.data?.statusMsg || "Failed to fetch tasks. Try again later!",
+      );
+    }
+  }, [resp]);
 
   return (
     <Box>
       <Box mb={2}>
         <CardWrapper>
-          <Header handleAddBtn={open} />
+          <Header recordsCount={data?.length} handleAddBtn={open} />
         </CardWrapper>
       </Box>
       <CardWrapper>
-        <TaskList />
+        <TaskList data={data} />
       </CardWrapper>
 
       {isOpen && (

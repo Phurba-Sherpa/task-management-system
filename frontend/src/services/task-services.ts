@@ -9,8 +9,10 @@ type UpdateTaskProp = {
   id: number;
 };
 export const fetchTasks = async () => {
+  console.log("here")
   const url = "/tasks";
   const resp = await publicApi.get(url);
+  console.log(resp)
   return resp;
 };
 
