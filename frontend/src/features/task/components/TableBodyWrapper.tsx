@@ -73,6 +73,8 @@ const TableRowWrapper: FC<TaskProps> = ({
         }}
       >
         <StatusUpdateField />
+      </TableCell>
+      <TableCell>
         <TaskControls title={title} description={description} id={id} />
       </TableCell>
     </TableRow>

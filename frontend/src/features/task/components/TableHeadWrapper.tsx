@@ -8,6 +8,7 @@ const TableHeadWrapper = () => {
         <TableCell>title</TableCell>
         <TableCell>description</TableCell>
         <TableCell>Created At</TableCell>
+        <TableCell>Update progress</TableCell>
         <TableCell>Actions</TableCell>
       </TableRow>
     </TableHead>
