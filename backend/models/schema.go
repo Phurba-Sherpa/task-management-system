@@ -4,9 +4,9 @@ type TaskStatus string
 
 const (
 	ToDo       TaskStatus = "TODO"
-	InProgress TaskStatus = "IN_PROGRESS"
+	InProgress TaskStatus = "IN PROGRESS"
 	Done       TaskStatus = "DONE"
-	Blocked    TaskStatus = "ON_HOLD"
+	Blocked    TaskStatus = "ON HOLD"
 )
 
 // Task represents a task in the system
