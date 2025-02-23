@@ -3,10 +3,12 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/phurba-sherpa/task-management-backend/controllers"
+	"github.com/phurba-sherpa/task-management-backend/middleware"
 )
 
 func SetupRoutes() *gin.Engine {
 	r := gin.Default()
+	r.Use(middleware.CORSMiddleware())
 
 	v1 := r.Group("/api/v1")
 	{
