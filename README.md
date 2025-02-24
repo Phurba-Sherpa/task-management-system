@@ -47,7 +47,7 @@ go run main.go api
 ```
 or build and run:
 ```sh
-go build -o task_manager.exe .
+go build -o task_manager.exe main.go
 ./task_manager.exe api
 ```
 
