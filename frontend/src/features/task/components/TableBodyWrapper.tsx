@@ -76,7 +76,7 @@ const TableRowWrapper: FC<TaskProps> = ({
           </Typography>
         </Tooltip>
       </TableCell>
-      <TableCell>{createdAt}</TableCell>
+      <TableCell >{formatDate(createdAt)}</TableCell>
       <TableCell
         sx={{
           minWidth: "130px",
@@ -90,3 +90,9 @@ const TableRowWrapper: FC<TaskProps> = ({
     </TableRow>
   );
 };
+
+const formatDate = (unixTime: number) => {
+  const date = new Date(unixTime || 0)?.toLocaleString()
+  return date
+}
+
