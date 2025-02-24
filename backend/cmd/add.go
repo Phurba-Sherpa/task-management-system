@@ -1,11 +1,14 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 PHURBA SHERPA <phurba1404@gmail.com>
 */
 package cmd
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/phurba-sherpa/task-management-backend/models"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -19,21 +22,37 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+
+		if len(args) < 1 {
+			fmt.Println("Usage: ./task_manager add <task-name>")
+			return
+		}
+
+		title := strings.TrimSpace(args[0])
+
+		// Validate task name
+		if title == "" {
+			fmt.Println("Task name missing")
+			return
+		}
+
+		// Create a new task
+		newTask := models.Task{
+			Title:  title,
+			Status: "TODO",
+		}
+
+		if err := models.AddNewTask(&newTask); err != nil {
+			log.Err(err).Msg("❌ Failed to add task")
+			return
+		}
+
+		log.Info().Msg("✅ Task add successful")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
