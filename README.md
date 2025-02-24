@@ -3,6 +3,10 @@
 This repository contains a **frontend** built with Vite + TypeScript and a **backend** 
 built with Golang (using SQLite as the database).
 
+
+### Screenshot
+![screenshot](./preview.png)
+
 ## Prerequisites
 
 - **Node.js** (Latest LTS recommended)
