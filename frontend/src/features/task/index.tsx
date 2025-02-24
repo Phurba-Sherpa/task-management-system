@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import PageLoaderWithText from "../../components/ui/Loader";
 import { TaskProps } from "../../services/task-services";
 import NoInternet from "../../components/ui/NoInternet";
+import { NoRecords } from "../../components/ui/NoRecords";
 
 const TaskSection = () => {
   const { open, isOpen, close } = useDisclosure(false);
@@ -58,7 +59,7 @@ const TaskSection = () => {
         </CardWrapper>
       </Box>
       <CardWrapper>
-        <TaskList data={data} />
+        {data?.length > 0 ? <TaskList data={data} /> : <NoRecords />}
       </CardWrapper>
 
       {isOpen && (
