@@ -25,7 +25,7 @@ export const useTasks = () => {
   const { mutate: doAddTask, isPending: isAdding } = useMutation({
     mutationFn: addTask,
     onSuccess: (resp) => {
-      if (resp?.data?.status === 200) {
+      if (resp?.data?.status === 201) {
         onSuccess("Task successfully saved!");
         queryClient.invalidateQueries({ queryKey: [KEY] });
       } else {
@@ -41,7 +41,7 @@ export const useTasks = () => {
   const { mutate: doUpdateTask, isPending: isUpdating } = useMutation({
     mutationFn: updateTask,
     onSuccess: (resp) => {
-      if (resp?.data?.status === 201) {
+      if (resp?.data?.status === 200) {
         onSuccess("Task updated successfully!");
         queryClient.invalidateQueries({ queryKey: [KEY] });
       } else {
