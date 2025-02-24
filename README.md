@@ -65,6 +65,16 @@ cd ../frontend
 npm install or npm install -f
 ```
 
+### 8️⃣ ICreat `.env` file and configure  api base url
+```sh
+VITE_BASE_URL = http://localhost:8080/api/v1
+```
+or 
+```
+# you should be in `frontend/` dir
+cp .env.example .env
+```
+
 ### 9️⃣ Start the development server  
 ```sh
 npm run dev
