@@ -49,7 +49,8 @@ to quickly create a Cobra application.`,
 			return
 		}
 
-		log.Info().Msg("✅ Task add successful")
+		fmt.Print("✅ Task add successful\n")
+		fmt.Printf("| %d | %-55s | %-11s |\n", newTask.ID, newTask.Title, newTask.Status)
 	},
 }
 

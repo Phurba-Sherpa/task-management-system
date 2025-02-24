@@ -35,7 +35,9 @@ var processCmd = &cobra.Command{
 			return
 		}
 
-		fmt.Printf("Processed Task [%d]: %s -> ✅ DONE\n", task2beProcessed.ID, task2beProcessed.Title)
+		fmt.Print("Process status: DONE ✅\n")
+		fmt.Print("Process task:\n")
+		fmt.Printf("| %d | %-55s | %-11s |\n", task2beProcessed.ID, task2beProcessed.Title, task2beProcessed.Status)
 	},
 }
 
