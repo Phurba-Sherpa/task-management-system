@@ -7,6 +7,7 @@ import {
   updateTaskStatus,
 } from "../../services/task-services";
 import { useSnackbar } from "../../app/snackbar-provider";
+import { AxiosError } from "axios";
 
 const KEY = "TASKS";
 
@@ -15,7 +16,7 @@ export const useTasks = () => {
   const { onSuccess, onError } = useSnackbar();
 
   // Fetch tasks
-  const { data, isLoading, status } = useQuery({
+  const { data, isLoading, status, error } = useQuery({
     queryKey: [KEY],
     queryFn: fetchTasks,
   });
@@ -83,6 +84,7 @@ export const useTasks = () => {
 
   return {
     data,
+    fetchError: error as AxiosError,
     isLoading,
     status,
     doAddTask,

@@ -9,13 +9,18 @@ import { useSnackbar } from "../../app/snackbar-provider";
 import { useEffect } from "react";
 import PageLoaderWithText from "../../components/ui/Loader";
 import { TaskProps } from "../../services/task-services";
+import NoInternet from "../../components/ui/NoInternet";
 
 const TaskSection = () => {
   const { open, isOpen, close } = useDisclosure(false);
-  const { data: resp, isLoading, isPending, doAddTask } = useTasks();
+  const {
+    data: resp,
+    isLoading,
+    isPending,
+    doAddTask,
+    fetchError,
+  } = useTasks();
   const { onError } = useSnackbar();
-
-  let data = resp?.data?.status === 200 ? resp.data.data : [];
 
   useEffect(() => {
     if (resp && resp?.data?.status !== 200) {
@@ -24,6 +29,12 @@ const TaskSection = () => {
       );
     }
   }, [resp]);
+
+  if (fetchError && fetchError.code === "ERR_NETWORK") {
+    return <NoInternet />;
+  }
+
+  let data = resp?.data?.status === 200 ? resp.data.data : [];
 
   const handleSubmit = (e: HTMLFormElement) => {
     e.preventDefault();
