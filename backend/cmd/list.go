@@ -30,8 +30,7 @@ var listCmd = &cobra.Command{
 		}
 
 		for _, task := range tasks {
-			fmt.Printf("[%d] %-25s - %s\n", task.ID, task.Title, task.Status)
-			fmt.Println("")
+			fmt.Printf("| %d | %-55s | %-11s |\n", task.ID, task.Title, task.Status)
 		}
 		fmt.Printf("Total records: %d", len(tasks))
 	},
