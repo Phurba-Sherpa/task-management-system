@@ -15,8 +15,8 @@ type Task struct {
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	Status      TaskStatus `gorm:"type:text;default:TODO" json:"status"`
-	CreatedAt   int64      `gorm:"autoCreateTime:seconds" json:"createdAt"`
-	UpdatedAt   int64      `gorm:"autoUpdateTime:seconds" json:"updatedAt"`
+	CreatedAt   int64      `gorm:"autoCreateTime:milli" json:"createdAt"`
+	UpdatedAt   int64      `gorm:"autoUpdateTime:milli" json:"updatedAt"`
 }
 
 func (t *Task) TableName() string {
