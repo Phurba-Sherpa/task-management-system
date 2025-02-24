@@ -1,27 +1,41 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
 
+	"github.com/phurba-sherpa/task-management-backend/db"
+	"github.com/phurba-sherpa/task-management-backend/models"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
-// processCmd represents the process command
+/*
+for batch we can do `process --all`,
+since requirement isnt clear so single processing will be
+done, status TODO, and the oldest one
+*/
 var processCmd = &cobra.Command{
 	Use:   "process",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Process a single task that is in TODO state",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("process called")
+		var task2beProcessed models.Task
+		err := db.DB.Where("status = ?", "TODO").First(&task2beProcessed).Error
+		if err != nil {
+			log.Info().Msg("No tasks available to process.")
+			return
+		}
+
+		// Mark the task as completed
+		task2beProcessed.Status = "DONE"
+		if err := db.DB.Save(&task2beProcessed).Error; err != nil {
+			log.Error().Err(err).Msg("Failed to update task status.")
+			return
+		}
+
+		fmt.Printf("Processed Task [%d]: %s -> ✅ DONE\n", task2beProcessed.ID, task2beProcessed.Title)
 	},
 }
 
