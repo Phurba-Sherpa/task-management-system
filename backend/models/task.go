@@ -7,7 +7,7 @@ import (
 )
 
 func GetAllTasks(t *[]Task) (err error) {
-	if err = db.DB.Find(t).Error; err != nil {
+	if err = db.DB.Order("updated_at desc, created_at desc").Find(t).Error; err != nil {
 		return err
 	}
 	return nil
