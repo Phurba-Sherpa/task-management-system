@@ -35,6 +35,9 @@ const NoInternet = () => {
           sx={{ borderRadius: 99, mt: 3, maxWidth: "60%" }}
           variant="contained"
           fullWidth
+          onClick={() => {
+            window?.location.reload()
+          }}
         >
           Try again
         </Button>
