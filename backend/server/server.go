@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/phurba-sherpa/task-management-backend/config"
 	"github.com/phurba-sherpa/task-management-backend/db"
 	"github.com/phurba-sherpa/task-management-backend/models"
 	"github.com/phurba-sherpa/task-management-backend/routes"
@@ -9,7 +10,8 @@ import (
 
 func StartServer() {
 	log.Info().Msg("Starting server...")
-	db.InitDB()
+	cfg := config.LoadConfig()
+	db.InitDB(cfg)
 
 	log.Info().Msg("Running migrations...")
 	db.DB.AutoMigrate(&models.Task{})

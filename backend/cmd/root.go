@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/phurba-sherpa/task-management-backend/config"
 	"github.com/phurba-sherpa/task-management-backend/db"
 	"github.com/phurba-sherpa/task-management-backend/models"
 	"github.com/spf13/cobra"
@@ -17,7 +18,8 @@ var rootCmd = &cobra.Command{
 	Use:   "task-management-backend",
 	Short: "A CLI tool for managing tasks",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		db.InitDB()
+		cfg := config.LoadConfig()
+		db.InitDB(cfg)
 		db.DB.AutoMigrate(&models.Task{})
 
 		fmt.Println("Database initialized for CLI commands")
