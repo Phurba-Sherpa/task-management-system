@@ -11,5 +11,21 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql
 
+  fe:
+    build: ./frontend
+    command: npm run dev
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          initial_sync: true
+          ignore: 
+            - node_modules/
+        - action: rebuild
+          path: ./frontend/package.json
+
 volumes:
   pg-data:
