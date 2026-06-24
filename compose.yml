@@ -12,8 +12,9 @@ services:
       - pg-data:/var/lib/postgresql
 
   fe:
-    build: ./frontend
-    command: npm run dev
+    build: 
+      context: frontend
+      target: development
     ports:
       - 3000:3000
     develop:
@@ -21,7 +22,6 @@ services:
         - action: sync
           path: ./frontend
           target: /app
-          initial_sync: true
           ignore: 
             - node_modules/
         - action: rebuild
