@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: todo
     volumes:
       - pg-data:/var/lib/postgresql
+    networks:
+      - shared
 
   fe:
     build: 
@@ -29,3 +31,7 @@ services:
 
 volumes:
   pg-data:
+networks:
+  shared:
+    name: tms-nw
+    external: true
