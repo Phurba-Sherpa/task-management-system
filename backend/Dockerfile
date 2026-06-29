@@ -11,3 +11,17 @@ COPY . /app/
 EXPOSE 8080
 
 CMD ["go", "run", "main.go", "api"]
+
+# build stage
+
+FROM development AS build
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o /tms
+
+# Deployment stage
+FROM gcr.io/distroless/base-debian13 AS deploy
+WORKDIR /
+COPY --from=build /tms /tms
+EXPOSE 8080
+USER nonroot:nonroot
+ENTRYPOINT ["/tms", "api"]
