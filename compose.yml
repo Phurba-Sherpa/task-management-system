@@ -3,8 +3,6 @@ services:
     image: postgres:18
     restart: always
     shm_size: 128mb
-    ports:
-      - "5433:5432"
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: todo
@@ -12,6 +10,28 @@ services:
       - pg-data:/var/lib/postgresql
     networks:
       - shared
+
+  be: 
+    build:
+      context: backend
+      target: development
+      ports: 8080
+      environment: 
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:?Db password missing}
+      - DB_NAME=${DB_NAME:-todo}
+
+    networks:
+      - shared
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore: 
+            - 
 
   fe:
     build: 
