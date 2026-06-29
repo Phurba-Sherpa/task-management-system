@@ -1,22 +1,13 @@
 services:
-  db:
-    image: postgres:18
-    restart: always
-    shm_size: 128mb
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todo
-    volumes:
-      - pg-data:/var/lib/postgresql
-    networks:
-      - shared
-
   be: 
+    depends_on:
+      - db
     build:
       context: backend
       target: development
-      ports: 8080
-      environment: 
+    ports: 
+      - 8080:8080
+    environment: 
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=${DB_USER:-postgres}
@@ -24,21 +15,25 @@ services:
       - DB_NAME=${DB_NAME:-todo}
 
     networks:
-      - shared
+      - server-net
+      - app-net
     develop:
       watch:
         - action: sync
           path: ./backend
           target: /app
-          ignore: 
-            - 
-
+        - action: rebuild
+          path: ./backend/go.mod
   fe:
+    depends_on: 
+      - be
     build: 
       context: frontend
       target: development
     ports:
       - 3000:3000
+    networks: 
+      - app-net
     develop:
       watch:
         - action: sync
@@ -49,9 +44,26 @@ services:
         - action: rebuild
           path: ./frontend/package.json
 
+  db:
+    container_name: db
+    image: postgres:18
+    restart: always
+    shm_size: 128mb
+    ports: 
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todo
+    volumes:
+      - pg-data:/var/lib/postgresql
+    networks:
+      - server-net
 volumes:
   pg-data:
 networks:
-  shared:
-    name: tms-nw
+  app-net:
+    name: app-net
+    external: true
+  server-net:
+    name: db-net
     external: true
