@@ -11,12 +11,8 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:?Db password missing}
+      - DB_PASSWORD=/run/secrets/db_password
       - DB_NAME=${DB_NAME:-todo}
-
-    networks:
-      - server-net
-      - app-net
     develop:
       watch:
         - action: sync
@@ -24,6 +20,12 @@ services:
           target: /app
         - action: rebuild
           path: ./backend/go.mod
+
+    networks:
+      - server-net
+      - app-net
+    secrets:
+      - db_password
   fe:
     depends_on: 
       - be
@@ -52,14 +54,24 @@ services:
     ports: 
       - 5433:5432
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
       POSTGRES_DB: todo
     volumes:
       - pg-data:/var/lib/postgresql
     networks:
       - server-net
+    secrets:
+      - db_password
+# secrets
+secrets:
+  db_password:
+    file: secret.txt
+
+# db volume
 volumes:
   pg-data:
+
+# Network (webserver, db server)
 networks:
   app-net:
     name: app-net
