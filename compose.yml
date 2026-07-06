@@ -1,77 +1,11 @@
 services:
   be: 
-    depends_on:
-      - db
-    build:
-      context: backend
-      target: development
-    ports: 
-      - 8080:8080
-    environment: 
-      - DB_HOST=${DB_HOST:-db}
-      - DB_PORT=${DB_PORT:-5432}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:?DB password missing}
-      - DB_NAME=${DB_NAME:-todo}
-    develop:
-      watch:
-        - action: sync
-          path: ./backend
-          target: /app
-        - action: rebuild
-          path: ./backend/go.mod
-
-    networks:
-      - server-net
-      - app-net
+    container_name: be
   fe:
-    build: 
-      context: frontend
-      target: development
-    ports:
-      - 3000:3000
-    networks: 
-      - app-net
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend
-          target: /app
-          ignore: 
-            - node_modules/
-        - action: rebuild
-          path: ./frontend/package.json
-
+    container_name: fe
   db:
     container_name: db
     image: postgres:18
     restart: always
     shm_size: 128mb
-    ports: 
-      - 5433:5432
-    environment:
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
-      POSTGRES_DB: todo
-    volumes:
-      - pg-data:/var/lib/postgresql
-    networks:
-      - server-net
-    secrets:
-      - db_password
-# secrets
-secrets:
-  db_password:
-    file: ./secret.txt
 
-# db volume
-volumes:
-  pg-data:
-
-# Network (webserver, db server)
-networks:
-  app-net:
-    name: app-net
-    external: true
-  server-net:
-    name: db-net
-    external: true
