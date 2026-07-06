@@ -2,9 +2,11 @@ services:
   fe:
     build:
       context: frontend
-      targer: development
+      target: development
     ports:
       - 3000:3000
+    environment:
+      - VITE_REACT_API_URL=${VITE_REACT_API_URL:-http://localhost:8080}
     develop:
       watch:
         - action: sync
@@ -16,8 +18,8 @@ services:
           path: frontend/package.json
   be:
     build: 
-      context: backend
-      targer: development
+      context: backend # required for dockerfile
+      target: development
     ports:
       - 8080:8080
     develop:
@@ -27,16 +29,20 @@ services:
           target: /app
         - action: rebuild
           path: ./backend/go.mod
+    environment:
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-tms-db}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:?Db password missing}
   db:
-    conatiner_name: db
-    image: postgres:18
-    restart: always
-    shm_size: 128mb
     ports:
       - 5433:5432
     environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todo
+      - POSTGRES_PASSWORD=${DB_PASSWORD:?Db password required}
+      - POSTGRES_DB=${DB_NAME:-tms-db}
     volumes: 
-      - pg-data:/var/lib/postgresql
+      - pg_data:/var/lib/postgresql
   
+volumes:
+  pg_data:
