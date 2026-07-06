@@ -1,0 +1,42 @@
+services:
+  fe:
+    build:
+      context: frontend
+      targer: development
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+        - action: sync
+          path: frontend
+          target: /app
+          ignore: 
+            - node_modules/
+        - action: rebuild
+          path: frontend/package.json
+  be:
+    build: 
+      context: backend
+      targer: development
+    ports:
+      - 8080:8080
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+        - action: rebuild
+          path: ./backend/go.mod
+  db:
+    conatiner_name: db
+    image: postgres:18
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todo
+    volumes: 
+      - pg-data:/var/lib/postgresql
+  
