@@ -6,6 +6,8 @@ on:
     paths:
       - 'frontend/**'
       - 'github/workflows/deploy-fe.yml'
+    branches:
+      - "main"
     tags:
       - 'v*'
   pull_request:
@@ -73,7 +75,7 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     env:
-      GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GH_PAT: ${{ secrets.GHCR_PAT }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ github.event.repository.name }}
 
