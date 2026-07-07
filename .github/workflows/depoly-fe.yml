@@ -93,7 +93,7 @@ jobs:
           username: ${{vars.EC2_USER}}
           key: ${{secrets.EC2_KEY}}
           source: compose.yml,compose.prod.yml
-          target: ~/${{GH_REPO}}
+          target: ~/$GH_REPO
       - name: SSH and Deploy
         uses: appleboy/scp-action@v0.1.7
         with:
