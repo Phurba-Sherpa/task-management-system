@@ -5,7 +5,7 @@ on:
   push:
     paths:
       - 'frontend/**'
-      - 'github/workflows/deploy-fe.yml'
+      - '.github/workflows/deploy-fe.yml'
     branches:
       - "main"
     tags:
