@@ -1,6 +1,6 @@
 name: Test, build, deploy
 
-# Trigger point
+# Trigger points
 on:
   push:
     paths:
@@ -25,7 +25,7 @@ jobs:
     environment:
       name: staging
     permissions:
-      content: read
+      contents: read
       packages: write
 
     steps:
