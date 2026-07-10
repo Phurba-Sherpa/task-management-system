@@ -6,5 +6,6 @@ backend/tmp
 backend/task-management-system.db
 backend/task_manager
 backend/task_manager.exe*
-
+secret.txt
+*.env
 *.db

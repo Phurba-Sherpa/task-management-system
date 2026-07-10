@@ -41,7 +41,7 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/${{ github.repository}}
+            ghcr.io/${{ github.repository}}-fe
 
       - name: Login into container registry
         uses: docker/login-action@v4
@@ -75,9 +75,9 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     env:
-      GH_PAT: ${{ secrets.GHCR_PAT }}
-      GH_OWNER: ${{ github.repository_owner }}
-      GH_REPO: ${{ github.event.repository.name }}
+      SERVER_HOST: ${{vars.EC2_HOST}}
+      SERVER_USER: ${{ vars.EC2_USER }}
+      SERVER_KEY: ${{ secrets.EC2_KEY }}
 
     steps:
       - name: Checkout compose.yml
@@ -89,20 +89,37 @@ jobs:
       - name: Copy compose file to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{vars.EC2_HOST}}
-          username: ${{vars.EC2_USER}}
-          key: ${{secrets.EC2_KEY}}
+          host: $SERVER_HOST
+          username: $SERVER_USER
+          key: $SERVER_KEY
           source: "compose.yml,compose.prod.yml"
           target: ~/$GH_REPO
+
       - name: SSH and Deploy
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ vars.EC2_HOST }}
-          username: ${{ vars.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          envs: GH_PAT,GH_OWNER,GH_REPO
+          host: $SERVER_HOST
+          username: $SERVER_USER
+          key: $SERVER_KEY
+          envs: 
+            GH_PAT: ${{ secrets.GHCR_PAT }}
+            GH_OWNER: ${{ github.repository_owner }}
+            GH_REPO: ${{ github.event.respository.name }}
+            DB_NAME: ${{ vars.DB_NAME }}
+            DB_USER: ${{ vars.DB_USER }}
+            DB_HOST: ${{ vars.DB_HOST }}
+            DB_PASSWORD: ${{ vars.DB_PASSWORD }}
+
+          # GH_PAT,GH_OWNER,GH_REPO
           script: |
             echo $GH_PAT | docker login ghcr.io -u $GH_OWNER --password-stdin
             cd ~/$GH_REPO
+            cat >> .env << EOF
+            DB_NAME=$DB_NAME
+            DB_HOST=$DB_HOST
+            DB_PORT=5432
+            DB_USER=$DB_USER
+            DB_PASSWORD=$DB_USER
+            EOF
             docker compose -f compose.yml -f compose.prod.yml up fe --pull always -d
 

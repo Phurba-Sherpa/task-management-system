@@ -1,6 +1,6 @@
 services:
   fe:
-    image: ghcr.io/phurba-sherpa/task-management-system/tms-fe
+    image: ghcr.io/phurba-sherpa/task-management-system/fe
     ports:
       - 3000:80
     networks:
@@ -10,7 +10,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    image: ghcr.io/phurba-sherpa/task-management-system/tms-be
+    image: ghcr.io/phurba-sherpa/task-management-system/be
     ports:
       - 8080:8080
     environment:
