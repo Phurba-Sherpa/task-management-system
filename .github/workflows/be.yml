@@ -1,0 +1,125 @@
+name: Test, build, deploy
+
+# Trigger points
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'backend/**'
+      - '.github/workflows/be.yml'
+    tags:
+      - 'v*'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'github/workflows/be.yml'
+    branches:
+      - 'main'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            backend
+      - name: Extract meta data for docker image
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: |
+            ghcr.io/${{ github.repository}}/be
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Login into container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build & push
+        uses: docker/build-push-action@v7
+        with: 
+          context: backend
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          annotatins: ${{ steps.meta.outputs.annotations }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          sbom: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    permissions:
+      packages: read
+    needs: build
+    if: github.event_name != 'pull_request'
+    env:
+      SERVER_HOST: ${{vars.SERVER_HOST}}
+      SERVER_USER: ${{ vars.SERVER_USER }}
+      SERVER_KEY: ${{ secrets.SERVER_KEY }}
+      GH_PAT: ${{ secrets.GHCR_PAT }}
+      GH_OWNER: ${{ github.repository_owner }}
+      GH_REPO: ${{ github.event.repository.name }}
+      DB_NAME: ${{ vars.DB_NAME }}
+      DB_USER: ${{ vars.DB_USER }}
+      DB_HOST: ${{ vars.DB_HOST }}
+      API_HOST: ${{ vars.API_HOST }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    steps:
+      - name: Checkout compose.yml
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            compose.yml
+            compose.prod.yml
+      - name: Copy compose file to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ env.SERVER_HOST }}
+          username: ${{ env.SERVER_USER }}
+          key: ${{ env.SERVER_KEY }}
+          source: "compose.yml,compose.prod.yml"
+          target: ~/${{ env.GH_REPO }}
+
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.SERVER_HOST }}
+          username: ${{ env.SERVER_USER }}
+          key: ${{ env.SERVER_KEY }}
+          envs: GH_PAT, GH_OWNER, GH_REPO, DB_NAME,DB_USER,DB_HOST,DB_PASSWORD,API_HOST
+          script: |
+            echo $GH_PAT | docker login ghcr.io -u $GH_OWNER --password-stdin
+            cd ~/$GH_REPO
+            cat > .env << EOF
+            DB_NAME=$DB_NAME
+            DB_HOST=$DB_HOST
+            DB_PORT=5432
+            DB_USER=$DB_USER
+            DB_PASSWORD=$DB_PASSWORD
+            VITE_API_BASE_URL=$API_HOST
+            EOF
+            docker compose -f compose.yml -f compose.prod.yml up be --pull always -d
