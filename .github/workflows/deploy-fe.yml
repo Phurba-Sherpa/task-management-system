@@ -74,9 +74,9 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request'
     env:
-      SERVER_HOST: ${{vars.EC2_HOST}}
-      SERVER_USER: ${{ vars.EC2_USER }}
-      SERVER_KEY: ${{ secrets.EC2_KEY }}
+      SERVER_HOST: ${{vars.SERVER_HOST}}
+      SERVER_USER: ${{ vars.SERVER_USER }}
+      SERVER_KEY: ${{ secrets.SERVER_KEY }}
       GH_PAT: ${{ secrets.GHCR_PAT }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ github.event.repository.name }}
