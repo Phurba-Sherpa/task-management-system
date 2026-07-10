@@ -2,12 +2,11 @@ name: Test, build, deploy
 
 # Trigger points
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'frontend/**'
       - '.github/workflows/deploy-fe.yml'
-    branches:
-      - "main"
     tags:
       - 'v*'
   pull_request:
