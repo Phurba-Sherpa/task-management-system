@@ -116,7 +116,7 @@ jobs:
             DB_HOST=$DB_HOST
             DB_PORT=5432
             DB_USER=$DB_USER
-            DB_PASSWORD=$DB_USER
+            DB_PASSWORD=$DB_PASSWORD
             EOF
             docker compose -f compose.yml -f compose.prod.yml up fe --pull always -d
 
