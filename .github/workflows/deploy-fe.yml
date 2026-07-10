@@ -78,6 +78,13 @@ jobs:
       SERVER_HOST: ${{vars.EC2_HOST}}
       SERVER_USER: ${{ vars.EC2_USER }}
       SERVER_KEY: ${{ secrets.EC2_KEY }}
+      GH_PAT: ${{ secrets.GHCR_PAT }}
+      GH_OWNER: ${{ github.repository_owner }}
+      GH_REPO: ${{ github.event.respository.name }}
+      DB_NAME: ${{ vars.DB_NAME }}
+      DB_USER: ${{ vars.DB_USER }}
+      DB_HOST: ${{ vars.DB_HOST }}
+      DB_PASSWORD: ${{ vars.DB_PASSWORD }}
 
     steps:
       - name: Checkout compose.yml
@@ -101,16 +108,7 @@ jobs:
           host: $SERVER_HOST
           username: $SERVER_USER
           key: $SERVER_KEY
-          envs: 
-            GH_PAT: ${{ secrets.GHCR_PAT }}
-            GH_OWNER: ${{ github.repository_owner }}
-            GH_REPO: ${{ github.event.respository.name }}
-            DB_NAME: ${{ vars.DB_NAME }}
-            DB_USER: ${{ vars.DB_USER }}
-            DB_HOST: ${{ vars.DB_HOST }}
-            DB_PASSWORD: ${{ vars.DB_PASSWORD }}
-
-          # GH_PAT,GH_OWNER,GH_REPO
+          envs: GH_PAT, GH_OWNER, GH_REPO, DB_NAME,DB_USER,DB_HOST,DB_PASSWORD
           script: |
             echo $GH_PAT | docker login ghcr.io -u $GH_OWNER --password-stdin
             cd ~/$GH_REPO
