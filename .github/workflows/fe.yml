@@ -65,6 +65,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           annotations: ${{ steps.meta.outputs.annotations }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            API_HOST=${{ vars.API_HOST }}
           provenance: true
           sbom: true
           cache-from: type=gha
@@ -85,11 +87,7 @@ jobs:
       GH_PAT: ${{ secrets.GHCR_PAT }}
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ github.event.repository.name }}
-      DB_NAME: ${{ vars.DB_NAME }}
-      DB_USER: ${{ vars.DB_USER }}
-      DB_HOST: ${{ vars.DB_HOST }}
       API_HOST: ${{ vars.API_HOST }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
       - name: Checkout compose.yml

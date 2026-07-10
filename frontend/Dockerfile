@@ -1,6 +1,8 @@
 # syntax=docker/dockerfile:1
 FROM --platform=$BUILDPLATFORM node:24 AS development
 
+ARG API_HOST
+ENV VITE_BASE_URL=$API_HOST
 # set workdir
 WORKDIR /app
 

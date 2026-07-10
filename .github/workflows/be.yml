@@ -88,7 +88,6 @@ jobs:
       DB_NAME: ${{ vars.DB_NAME }}
       DB_USER: ${{ vars.DB_USER }}
       DB_HOST: ${{ vars.DB_HOST }}
-      API_HOST: ${{ vars.API_HOST }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
@@ -123,6 +122,5 @@ jobs:
             DB_PORT=5432
             DB_USER=$DB_USER
             DB_PASSWORD=$DB_PASSWORD
-            VITE_API_BASE_URL=$API_HOST
             EOF
             docker compose -f compose.yml -f compose.prod.yml up be --pull always -d
