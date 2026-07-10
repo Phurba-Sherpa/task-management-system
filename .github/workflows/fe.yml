@@ -6,13 +6,13 @@ on:
   push:
     paths:
       - 'frontend/**'
-      - '.github/workflows/deploy-fe.yml'
+      - '.github/workflows/fe.yml'
     tags:
       - 'v*'
   pull_request:
     paths:
       - 'frontend/**'
-      - 'github/workflows/deploy-fe.yml'
+      - 'github/workflows/fe.yml'
     branches:
       - 'main'
 
@@ -85,6 +85,7 @@ jobs:
       DB_NAME: ${{ vars.DB_NAME }}
       DB_USER: ${{ vars.DB_USER }}
       DB_HOST: ${{ vars.DB_HOST }}
+      API_HOST: ${{ vars.API_HOST }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
@@ -109,7 +110,7 @@ jobs:
           host: ${{ env.SERVER_HOST }}
           username: ${{ env.SERVER_USER }}
           key: ${{ env.SERVER_KEY }}
-          envs: GH_PAT, GH_OWNER, GH_REPO, DB_NAME,DB_USER,DB_HOST,DB_PASSWORD
+          envs: GH_PAT, GH_OWNER, GH_REPO, DB_NAME,DB_USER,DB_HOST,DB_PASSWORD,API_HOST
           script: |
             echo $GH_PAT | docker login ghcr.io -u $GH_OWNER --password-stdin
             cd ~/$GH_REPO
@@ -119,6 +120,7 @@ jobs:
             DB_PORT=5432
             DB_USER=$DB_USER
             DB_PASSWORD=$DB_PASSWORD
+            VITE_API_BASE_URL=$API_HOST
             EOF
             docker compose -f compose.yml -f compose.prod.yml up fe --pull always -d
 
