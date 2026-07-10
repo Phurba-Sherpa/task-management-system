@@ -80,7 +80,7 @@ jobs:
       SERVER_KEY: ${{ secrets.EC2_KEY }}
       GH_PAT: ${{ secrets.GHCR_PAT }}
       GH_OWNER: ${{ github.repository_owner }}
-      GH_REPO: ${{ github.event.respository.name }}
+      GH_REPO: ${{ github.event.repository.name }}
       DB_NAME: ${{ vars.DB_NAME }}
       DB_USER: ${{ vars.DB_USER }}
       DB_HOST: ${{ vars.DB_HOST }}
@@ -96,18 +96,18 @@ jobs:
       - name: Copy compose file to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: $SERVER_HOST
-          username: $SERVER_USER
-          key: $SERVER_KEY
+          host: ${{ env.SERVER_HOST }}
+          username: ${{ env.SERVER_USER }}
+          key: ${{ env.SERVER_KEY }}
           source: "compose.yml,compose.prod.yml"
-          target: ~/$GH_REPO
+          target: ~/${{ env.GH_REPO }}
 
       - name: SSH and Deploy
         uses: appleboy/ssh-action@v1
         with:
-          host: $SERVER_HOST
-          username: $SERVER_USER
-          key: $SERVER_KEY
+          host: ${{ env.SERVER_HOST }}
+          username: ${{ env.SERVER_USER }}
+          key: ${{ env.SERVER_KEY }}
           envs: GH_PAT, GH_OWNER, GH_REPO, DB_NAME,DB_USER,DB_HOST,DB_PASSWORD
           script: |
             echo $GH_PAT | docker login ghcr.io -u $GH_OWNER --password-stdin
