@@ -88,6 +88,7 @@ jobs:
       GH_OWNER: ${{ github.repository_owner }}
       GH_REPO: ${{ github.event.repository.name }}
       API_HOST: ${{ vars.API_HOST }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
     steps:
       - name: Checkout compose.yml
